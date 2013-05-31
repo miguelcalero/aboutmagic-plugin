@@ -1,0 +1,19 @@
+{
+    "name": "sopinet/aboutmagic-plugin",
+    "description": "AboutMagic Plugin for Wordpress",
+    "keywords": ["about.me", "profiles", "about", "wordpress", "plugin"],
+    "homepage": "https://github.com/sopinet/aboutmagic-wordpress",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fernando Hidalgo",
+            "email": "fhidalgo@sopinet.com",
+            "homepage": "http://sopinet.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "sopinet/aboutmagic": "dev-master"
+    }
+}

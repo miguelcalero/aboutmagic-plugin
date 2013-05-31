@@ -1,0 +1,138 @@
+<?php
+	// check for namespacing collision
+	if( !class_exists( 'helperAboutMagic' ) ) : 
+	class helperAboutMagic {
+		static $aboutmagic_key = null; // Configure in ADMIN
+		static $profiles = null; // Configure in ADMIN
+		static $cachetime = 10800; // Time for cache data from about.me (TODO: Configurable) , cada 3 horas
+
+		function post_to_url($url, $data) { 
+			$fields = ''; 
+			foreach($data as $key => $value) { 
+				$fields .= $key . '=' . $value . '&'; 
+			} 
+			rtrim($fields, '&');
+			// TODO: Check if curl_init is enabled
+			if (false) {
+				$post = curl_init(); 
+				curl_setopt($post, CURLOPT_URL, $url); 
+				curl_setopt($post, CURLOPT_POST, count($data)); 
+				curl_setopt($post, CURLOPT_POSTFIELDS, $fields); 
+				curl_setopt($post, CURLOPT_RETURNTRANSFER, 1); 
+				$result = curl_exec($post); 
+				curl_close($post);
+			} else {
+				$result = file_get_contents($url."?".$fields);
+			}		
+			return $result;
+		}
+
+		function getArray($file) {
+			return json_decode(helperAboutMagic::getFile($file), true);
+		}
+
+		// Get file
+		function getFile($file) {
+			$string = file_get_contents($file);
+			return $string;
+		}
+
+		// TODO: Temporizador de caché
+		// time() - filemtime($this->cacheFileName)) < $this->cacheTime
+		function processProfile($profile) {
+			$url_data = "https://api.about.me/api/v2/json/user/view/".$profile;
+			$dir = ABOUTMAGIC_DIR . "cache/profiles/";
+			if (!file_exists($dir)) mkdir($dir);
+			$file = $dir . md5($url_data);
+
+			if (!file_exists($file) || (time() - filemtime($file) > helperAboutMagic::$cachetime)) {
+				$data = array(
+						"extended" => "true",
+						"client_id" => helperAboutMagic::$aboutmagic_key
+						);
+
+				$ret = helperAboutMagic::post_to_url($url_data, $data);
+				$fp = fopen($file, 'w');
+				fwrite($fp, $ret);
+				fclose($fp);
+			}
+
+			return helperAboutMagic::getArray($file);
+		}
+
+		function saveFileURL($file, $url) {
+			// TODO: Se puede activar... file_put_contents($file, file_get_contents($url));
+			$ch = curl_init($url);
+			$fp = fopen($file, 'wb');
+			curl_setopt($ch, CURLOPT_FILE, $fp);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_exec($ch);
+			curl_close($ch);
+			fclose($fp);
+		}
+
+		function proccessIMG($url) {
+// ORIGINAL:			return $url;
+			$dir = $dir = ABOUTMAGIC_DIR . "cache/images/";
+			if (!file_exists($dir)) mkdir($dir);
+			$file = $dir . md5($url) . ".jpg";
+			if (!file_exists($file) || (time() - filemtime($file) > helperAboutMagic::$cachetime)) {
+				helperAboutMagic::saveFileURL($file, $url);
+
+				// WEB INTERESANTE: http://www.rpublica.net/imagemagick/artisticas.html#sepia-tone
+
+				$file_efx = $dir . md5($url). "_ex.jpg";
+				// pencil: $command_thumb = "convert -define jpeg:size=300x300 ".$file." -thumbnail 300x220^ -colorspace Gray -negate -edge 1 -negate -blur 0x.5 -gravity center -extent 300x220 ".$file_efx;
+				/* sepia: */ $command_thumb = "convert -define jpeg:size=300x300 ".$file." -thumbnail 300x220^ -sepia-tone 80% -gravity center -extent 300x220 ".$file_efx;
+				// azul + sepia: $command_thumb = "convert -define jpeg:size=300x300 ".$file." -thumbnail 300x220^ -sepia-tone 70% -fill blue -tint 80% -gravity center -extent 300x220 ".$file_efx;
+				// azul: $command_thumb = "convert -define jpeg:size=300x300 ".$file." -thumbnail 300x220^ -fill blue -tint 60% -gravity center -extent 300x220 ".$file_efx;
+				// sketch: $command_thumb = "convert -define jpeg:size=300x300 ".$file." -thumbnail 300x220^ -sketch 0x20+120 -gravity center -extent 300x220 ".$file_efx;
+				// solarize: $command_thumb = "convert -define jpeg:size=300x300 ".$file." -thumbnail 300x220^ -solarize 55 -gravity center -extent 300x220 ".$file_efx;
+				
+/*echo $command_thumb;
+exit();*/
+				exec($command_thumb, $output);
+			}
+			return ABOUTMAGIC_URL . "/cache/images/".md5($url). "_ex.jpg";
+			return $url;
+		}
+
+		function getProfiles() {
+			$options = get_option('aboutmagic_options');
+			$out = (isset($options['about_key'])) ? $options['about_key'] : '';
+			$pro = (isset($options['about_profiles'])) ? $options['about_profiles'] : '';
+
+			if ($out == "" || $pro == "") die("You must set about.me key and profiles separated by commas in [About.me Configuration]");
+
+			helperAboutMagic::$aboutmagic_key = $out;
+			helperAboutMagic::$profiles = $pro;
+
+			$pros = explode(",",helperAboutMagic::$profiles);
+			foreach($pros as $pro) {
+				$profiles[] = helperAboutMagic::processProfile(trim($pro));
+			}
+
+			return $profiles;
+		}
+
+		function getPlatform($websites, $platform) {
+			$images['twitter'] = 'wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/Twitter.png';
+			$images['facebook'] = 'wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/Facebook.png';
+			$images['linkedin'] = 'wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/LinkedIn.png';
+			$images['wordpress'] = 'wp-content/plugins/aboutmagic-master/assets/img/socialicons/WordPress.png';
+			$images['googleplus'] = 'wp-content/plugins/aboutmagic-master/assets/img/socialicons/Google.png';
+
+			$site = '';
+			foreach($websites as $web) {
+				if ($web['platform'] == $platform) $site = $web['site_url'];
+			}
+			if ($site == '') return '';
+			$html = '<a href="'.$site.'"><img width="30px" src="';
+			$html .= $images[$platform];
+			$html .= '"></a>';
+			return $html;
+		}
+	}
+
+	endif;
+?>
