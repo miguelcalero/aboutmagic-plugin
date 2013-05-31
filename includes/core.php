@@ -36,7 +36,8 @@ class superAboutMagic {
 		$options = get_option('aboutmagic_options');
 		$width = (isset($options['layout_width'])) ? $options['layout_width'] : '800px';
 
-		$html = '<div id="content">';
+		$html .= '<div id="message-aboutmagic">Cargando perfiles, espere por favor... <span id="time-aboutmagic"></span></div>';
+		$html .= '<div id="content-aboutmagic" style="display:none">';
 
 		$options = get_option('aboutmagic_options');
 		$ops['about_key'] = (isset($options['about_key'])) ? $options['about_key'] : '';

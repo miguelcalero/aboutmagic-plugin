@@ -14,6 +14,8 @@ jQuery(function($){
 		animation	:	'slide',	//fade or slide
 		hover_x		:	'400px'		//Horizontal position on hover
 	});
+	$('#message-aboutmagic').delay(4000).fadeOut();
+	$('#content-aboutmagic').delay(4000).fadeIn();
 });
 </script>
 <style>
@@ -54,7 +56,7 @@ jQuery(function($){
 		height:100%;
 		width:100%;
 	}
-	#content{ width:<?php echo $width;?>; margin:0px auto; padding:0px 0px; }
+	#content-aboutmagic{ width:<?php echo $width;?>; margin:0px auto; padding:0px 0px; }
 	.clearfix{ display: block; height: 0; clear: both; visibility: hidden; }
 
 	.detupper { text-transform:uppercase; }
