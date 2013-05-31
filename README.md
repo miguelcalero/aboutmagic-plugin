@@ -1,5 +1,5 @@
-aboutmagic
-==========
+aboutmagic-plugin
+=================
 
 Plugin for Wordpress. It create simple people gallery from about.me profiles
 
