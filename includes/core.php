@@ -42,6 +42,7 @@ class superAboutMagic {
 		$ops['about_key'] = (isset($options['about_key'])) ? $options['about_key'] : '';
 		$ops['cache'] = 3600;
 		$ops['dir'] = ABOUTMAGIC_DIR . "cache/profiles/";
+		$ops['fx'] = "sepia";
 
 		$nicknames = (isset($options['about_profiles'])) ? $options['about_profiles'] : '';
 
@@ -105,6 +106,8 @@ $html .= '</div>';
 }
 $html .= '<div class="clearfix"></div>';
 $html .= '</div>';
+
+$html .= '<br/><br/><p>powered by <a href="https://github.com/sopinet/aboutmagic-plugin" target="_blank">aboutmagic-plugin</a></p>';
 
 		return $html;
 
