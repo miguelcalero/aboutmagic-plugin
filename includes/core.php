@@ -41,7 +41,7 @@ class superAboutMagic {
 
 		$options = get_option('aboutmagic_options');
 		$ops['about_key'] = (isset($options['about_key'])) ? $options['about_key'] : '';
-		$ops['cache'] = 3600;
+		$ops['cache_time'] = 14400;
 		$ops['dir'] = ABOUTMAGIC_DIR . "cache/profiles/";
 		$ops['fx'] = "sepia";
 
