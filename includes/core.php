@@ -10,11 +10,11 @@ class superAboutMagic {
 	}
 
 	function getPlatform($websites, $platform) {
-		$images['twitter'] = 'wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/Twitter.png';
-		$images['facebook'] = 'wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/Facebook.png';
-		$images['linkedin'] = 'wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/LinkedIn.png';
-		$images['wordpress'] = 'wp-content/plugins/aboutmagic-master/assets/img/socialicons/WordPress.png';
-		$images['googleplus'] = 'wp-content/plugins/aboutmagic-master/assets/img/socialicons/Google.png';
+		$images['twitter'] = home_url() . '/wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/Twitter.png';
+		$images['facebook'] = home_url() . '/wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/Facebook.png';
+		$images['linkedin'] = home_url() . '/wp-content/plugins/aboutmagic-plugin/assets/img/socialicons/LinkedIn.png';
+		$images['wordpress'] = home_url() . '/wp-content/plugins/aboutmagic-master/assets/img/socialicons/WordPress.png';
+		$images['googleplus'] = home_url() . '/wp-content/plugins/aboutmagic-master/assets/img/socialicons/Google.png';
 
 		$site = '';
 		foreach($websites as $web) {
