@@ -17,6 +17,11 @@ Plugin for Wordpress. It create simple people gallery from about.me profiles
 4. Set 777 to folder cache in plugin folder (wp-content/plugins/aboutmagic-plugin/cache)
 5. Configure plugin from wp-admin, set about.me key and profiles
 
+## USAGE
+
+You can configure nicknames and usage [aboutmagic] shortcode
+Too, you can add only some nicknames so: [aboutmagic nick1 nick2]
+
 ## FAQ
 
 Errors, No run?

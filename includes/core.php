@@ -28,24 +28,30 @@ class superAboutMagic {
 	}
 	
 	// SHORTCODE
-	function shortcode() {
+	function shortcode($atts) {
 		include(ABOUTMAGIC_DIR."vendor/autoload.php");
 		include(ABOUTMAGIC_DIR."includes/layout.php");
-//		return "."
-		//return "HOLA MUNDO";
 		$options = get_option('aboutmagic_options');
 		$width = (isset($options['layout_width'])) ? $options['layout_width'] : '800px';
 
-		$html .= '<div id="message-aboutmagic">Cargando perfiles, espere por favor... <span id="time-aboutmagic"></span></div>';
-		$html .= '<div id="content-aboutmagic" style="display:none">';
+		$html .= '<div class="message-aboutmagic">Cargando perfiles, espere por favor...</div>';
+		$html .= '<div class="content-aboutmagic" style="display:none">';
 
 		$options = get_option('aboutmagic_options');
 		$ops['about_key'] = (isset($options['about_key'])) ? $options['about_key'] : '';
-		$ops['cache_time'] = 14400;
+		$ops['cache_time'] = 3600000;
 		$ops['dir'] = ABOUTMAGIC_DIR . "cache/profiles/";
 		$ops['fx'] = "sepia";
 
-		$nicknames = (isset($options['about_profiles'])) ? $options['about_profiles'] : '';
+		if ($atts == "") {
+			$nicknames = (isset($options['about_profiles'])) ? $options['about_profiles'] : '';
+		} else {
+			$nicknames = "";
+			foreach($atts as $att) {
+				if ($nicknames != "") $nicknames .= ",";
+				$nicknames .= $att;
+			}
+		}
 
 		$aboutmagicservice = new \Sopinet\Aboutmagic\AboutMagicService();
 		$profiles = $aboutmagicservice->getProfiles($nicknames, $ops);
@@ -102,13 +108,11 @@ $html .= '</div>';
 
 
 $html .= '</div>';
-
-//$html .= '<div>RRSS</div>';
 }
 $html .= '<div class="clearfix"></div>';
 $html .= '</div>';
 
-$html .= '<br/><br/><p>powered by <a href="https://github.com/sopinet/aboutmagic-plugin" target="_blank">aboutmagic-plugin</a></p>';
+//TODO: Optinal, $html .= '<br/><br/><p>powered by <a href="https://github.com/sopinet/aboutmagic-plugin" target="_blank">aboutmagic-plugin</a></p>';
 
 		return $html;
 
@@ -117,7 +121,7 @@ $html .= '<br/><br/><p>powered by <a href="https://github.com/sopinet/aboutmagic
 	}
 }
 
-endif; // end collision check
+endif;
 
 new superAboutMagic;
 ?>

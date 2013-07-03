@@ -14,8 +14,8 @@ jQuery(function($){
 		animation	:	'slide',	//fade or slide
 		hover_x		:	'400px'		//Horizontal position on hover
 	});
-	$('#message-aboutmagic').delay(4000).fadeOut();
-	$('#content-aboutmagic').delay(4000).fadeIn();
+	$('.message-aboutmagic').delay(4000).fadeOut();
+	$('.content-aboutmagic').delay(4000).fadeIn();
 });
 </script>
 <style>
