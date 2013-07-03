@@ -20,6 +20,7 @@ Plugin for Wordpress. It create simple people gallery from about.me profiles
 ## USAGE
 
 You can configure nicknames and usage [aboutmagic] shortcode
+
 Too, you can add only some nicknames so: [aboutmagic nick1 nick2]
 
 ## FAQ
