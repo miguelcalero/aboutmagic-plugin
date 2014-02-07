@@ -43,13 +43,26 @@ class superAboutMagic {
 		$ops['dir'] = ABOUTMAGIC_DIR . "cache/profiles/";
 		$ops['fx'] = "sepia";
 
+//		Added shortcode attribute limit, establishing the maximum number of profiles to show. Default is 1000.
+		if ($atts['limit'] !== null) {
+			$limit=$atts['limit']++; 
+		} else {
+			$limit=1000;
+		};
+		
 		if ($atts == "") {
 			$nicknames = (isset($options['about_profiles'])) ? $options['about_profiles'] : '';
 		} else {
 			$nicknames = "";
-			foreach($atts as $att) {
+			
+//		Added shortcode attribute unordered, that shufles profiles so not being show in the same order listed in the shortoced. Default is false.			
+			if ($atts['unordered'] == "true") {
+				shuffle($atts);
+			};
+			
+			for ($i = 0; $i < $limit; $i++) {
 				if ($nicknames != "") $nicknames .= ",";
-				$nicknames .= $att;
+				$nicknames .= $atts[$i];
 			}
 		}
 
